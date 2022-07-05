@@ -6,7 +6,7 @@
 /*   By: zmunkhja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:45:14 by zmunkhja          #+#    #+#             */
-/*   Updated: 2022/06/29 13:45:28 by zmunkhja         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:16:42 by zmunkhja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
-#include "ft_printf.h"
+#include "printf/include/ft_printf.h"
 
 typedef struct server_message
 {
