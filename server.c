@@ -29,6 +29,27 @@ void    ft_bit_handler(int  bit)
 
     index = 0;
     g_msg.c += ((bit & 1) << g_msg.index);
+    g_msg.index++;
+    if(g_msg.index == 7)
+    {
+        ft_printf("%c", g_msg.c);
+        if(!g_msg.c)
+        {
+            ft_printf("\nError");
+        }
+        g_msg.c = 0;
+        g_msg.index = 0;
+    }
+}
 
-
+int main(void)
+{
+    ft_printf("The test server PID is %d\n", getpid());
+    while(1)
+    {
+        signal(SIGUSR2, ft_bit_handler);
+        signal(SIGUSR1, ft_bit_handler);
+        pause();
+    }
+    return (0);
 }
