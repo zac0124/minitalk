@@ -6,7 +6,7 @@
 /*   By: zmunkhja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:45:14 by zmunkhja          #+#    #+#             */
-/*   Updated: 2022/07/05 16:16:42 by zmunkhja         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:13:41 by zmunkhja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include "printf/include/ft_printf.h"
+#include "printf/include/libft.h"
 
 typedef struct server_message
 {
@@ -45,6 +46,7 @@ void    ft_bit_handler(int  bit)
 int main(void)
 {
     ft_printf("The test server PID is %d\n", getpid());
+	ft_printf("Waiting for the client \n");
     while(1)
     {
         signal(SIGUSR2, ft_bit_handler);

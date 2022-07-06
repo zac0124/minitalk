@@ -6,7 +6,7 @@
 /*   By: zmunkhja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:44:00 by zmunkhja          #+#    #+#             */
-/*   Updated: 2022/06/29 13:45:24 by zmunkhja         ###   ########.fr       */
+/*   Updated: 2022/07/05 16:35:06 by zmunkhja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
-#include "ft_printf.h"
-#include "libft.h"
+#include "printf/include/ft_printf.h"
+#include "printf/include/libft.h"
 
 void    ft_send_bit(int pid, char *str, size_t len)
 {
