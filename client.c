@@ -14,49 +14,108 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
-#include "printf/include/ft_printf.h"
-#include "printf/include/libft.h"
-
-void    ft_send_bit(int pid, char *str, size_t len)
+#include "libft/libft.h"
+/*
+static void receive(int sig)
 {
-    int shift;
-    size_t index;
+    static  int received;
 
-    index = 0;
-    while(index <= len)
+    received = 0;
+    if(sig == SIGUSR1)
     {
-        shift = 0;
-        while(shift < 7)
+        ++received;
+    }
+    else
+    {
+        ft_putnbr_fd(received,1);
+        ft_putchar_fd('\n', 1);
+        exit(0);
+    }
+}
+
+static  void ft_kill(pid_t pid, char *sig)
+{
+    int i;
+    char    c;
+
+    while(*sig)
+    {
+        i = 8;
+        c = *sig++;
+        while(i--)
         {
-            if((str[index] >> shift) & 1)
+            if(c >> i & 1)
             {
-                kill(pid, SIGUSR2);
+                ft_kill(pid, SIGUSR2);
             }
             else
             {
-                kill(pid, SIGUSR1);
-            }
-            shift++;
-            usleep(300);
-        }
-        index++;
+                ft_kill(pid, SIGUSR1);
+                }
+                usleep(300);
+                }
+                }
+    i = 8;
+    while(i--)
+    {
+        ft_kill(pid , SIGUSR1);
+        usleep(100);
     }
 }
 
 int main(int argc, char **argv)
 {
-    int pid;
-    char    *str;
+    if(argc != 3 || !ft_strlen(argv[2]))
+    {
+        return (1);
+    }
+    ft_putstr_fd("Sent :\n", 1);
+    ft_putnbr_fd(ft_strlen(argv[2]), 1);
+    ft_putchar_fd('\n', 1);
+    ft_putstr_fd("Received : \n", 1);
+    signal(SIGUSR1, receive);
+    signal(SIGUSR2, receive);
+    ft_kill(ft_atoi(argv[1]), argv[2]);
+    while(1){
+        pause();
+    }
+    return(0);
+}
+*/
 
-    if(argc == 3)
-    {
-        pid = ft_atoi(argv[1]);
-        str = argv[2];
-        ft_send_bit(pid, str, ft_strlen(str));
-    }
-    else
-    {
-        ft_printf("\n ERROR");
-    }
-    
+void	send_bit(int pid, char *str, size_t len)
+{
+	int		shift;
+	size_t	i;
+
+	i = 0;
+	while (i <= len)
+	{
+		shift = 0;
+		while (shift < 7)
+		{
+			if ((str[i] >> shift) & 1)
+				kill(pid, SIGUSR2);
+			else
+				kill(pid, SIGUSR1);
+			shift++;
+			usleep(300);
+		}
+		i++;
+	}
+}
+
+int	main(int argc, char **argv)
+{
+	int		pid;
+	char	*str;
+
+	if (argc == 3)
+	{
+		pid = ft_atoi(argv[1]);
+		str = argv[2];
+		send_bit(pid, str, ft_strlen(str));
+	}
+	else
+		ft_putstr_fd("Received : \n", 1);
 }

@@ -5,40 +5,39 @@
 #                                                     +:+ +:+         +:+      #
 #    By: zmunkhja <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/06/29 13:46:10 by zmunkhja          #+#    #+#              #
-#    Updated: 2022/07/06 14:36:55 by zmunkhja         ###   ########.fr        #
+#    Created: 2022/02/08 14:40:41 by zmunkhja          #+#    #+#              #
+#    Updated: 2022/02/22 14:27:41 by zmunkhja         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SOURCES = server.c client.c
-OBJECTS = $(SOURCES:.c=.o)
+NAME	= libft.a
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+SRCS	= *.c
 
-all: server client
+OBJS	= $(SRCS:%.c=%.o)
 
-bonus: server client
+FLAGS	= -Wall -Wextra -Werror
 
-server: server.o libft
-	$(CC) -o $@ $< -Llibft -lft
+CC = gcc #Flag for implicit rules
 
-client: client.o libft
-	$(CC) -o $@ $< -Llibft -lft
+CFLAGS = -g # Flag for implicit rules. Turn on debug info
 
-%.o: %.c
-	$(CC) -c $(CFLAGS) $?
+$(NAME): $(OBJS)
+	gcc $(FLAGS) -c $(SRCS)
+	ar rc $(NAME) $(OBJS)
+	echo "Done!"
 
-libft:
-	make -C libft
+all: $(NAME)
 
 clean:
-	rm -f $(OBJECTS)
-	make -C libft clean
-	
+	rm -rf $(NAME)
+
 fclean: clean
-	rm -f server client libft/libft.a
+	rm -rf $(NAME)
 
 re: fclean all
 
-.PHONY: all bonus libft clean fclean re
+test: all
+	./$(NAME)
+
+.PHONY: all, clean, fclean, re, test

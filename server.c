@@ -6,7 +6,7 @@
 /*   By: zmunkhja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 13:45:14 by zmunkhja          #+#    #+#             */
-/*   Updated: 2022/07/06 14:13:41 by zmunkhja         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:26:36 by zmunkhja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,44 +14,56 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
-#include "printf/include/ft_printf.h"
-#include "printf/include/libft.h"
+#include "libft/libft.h"
 
-typedef struct server_message
+static void send_bit(int sig, siginfo_t *info, void *context)
 {
-    char    c;
-    size_t  index;
-}   text_message;
-text_message    g_msg;
+    static int  i;
+    static pid_t    pid;
+    static char c;
 
-void    ft_bit_handler(int  bit)
-{
-    int index;
+    i = 0;
+    pid = 0;
+    c = 0;
 
-    index = 0;
-    g_msg.c += ((bit & 1) << g_msg.index);
-    g_msg.index++;
-    if(g_msg.index == 7)
+    (void)context;
+    if(!pid)
     {
-        ft_printf("%c", g_msg.c);
-        if(!g_msg.c)
-        {
-            ft_printf("\nError");
-        }
-        g_msg.c = 0;
-        g_msg.index = 0;
+        pid = info->si_pid;
     }
+    c |= (sig == SIGUSR2);
+    if(++i == 8)
+    {
+        i = 0;
+        if(!c)
+        {
+            kill(pid, SIGUSR2);
+            pid = 0;
+            return ;
+        }
+        ft_putchar_fd(c,1);
+        c = 0;
+        kill(pid, SIGUSR1);
+    }
+    else
+    {
+        c <<= 1;
+    }
+    
 }
 
-int main(void)
+int	main(void)
 {
-    ft_printf("The test server PID is %d\n", getpid());
-	ft_printf("Waiting for the client \n");
-    while(1)
-    {
-        signal(SIGUSR2, ft_bit_handler);
-        signal(SIGUSR1, ft_bit_handler);
-        pause();
-    }
-    return (0);
+	struct sigaction	s_sigaction;
+
+	ft_putstr_fd("Server PID: ", 1);
+	ft_putnbr_fd(getpid(), 1);
+	ft_putchar_fd('\n', 1);
+	s_sigaction.sa_sigaction = send_bit;
+	s_sigaction.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &s_sigaction, 0);
+	sigaction(SIGUSR2, &s_sigaction, 0);
+	while (1)
+		pause();
+	return (0);
 }
